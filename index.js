@@ -5,6 +5,7 @@ const app = express();
 const mongoose = require("mongoose");
 const userRoute = require("./router/userRoute");
 require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 //middleware
 app.use(cors());
@@ -20,6 +21,14 @@ mongoose
 
 app.get("/", (req, res) => {
   res.send("server is running");
+});
+
+app.post("/jwt", async (req, res) => {
+  const userData = req.body;
+  const privetKey = process.env.JWT_secure;
+  const token = jwt.sign(userData, privetKey, { expiresIn: "1h" });
+  console.log(token);
+  res.send({ token });
 });
 
 app.use("/user", userRoute);
