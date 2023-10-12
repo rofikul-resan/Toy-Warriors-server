@@ -14,7 +14,7 @@ app.use(express.json());
 
 // database connecting
 mongoose
-  .connect("mongodb://127.0.0.1:27017/toy-warrior")
+  .connect(`${process.env.DB_URL}/toy-warrior`)
   .then(() => {
     console.log("db connect");
   })

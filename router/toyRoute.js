@@ -6,6 +6,16 @@ const toyRoute = express.Router();
 
 // database model
 const ToyModel = mongoose.model("toy", toySchema);
+toyRoute.get("/", async (req, res) => {
+  const result = await ToyModel.find();
+  res.send(result);
+});
+
+toyRoute.get("/category", async (req, res) => {
+  const categoryKey = req.query.kay;
+  const result = await ToyModel.find({ category: categoryKey }).limit(6);
+  res.send(result);
+});
 
 toyRoute.post("/", async (req, res) => {
   const data = req.body;
