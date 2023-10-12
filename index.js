@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const userRoute = require("./router/userRoute");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const toyRoute = require("./router/toyRoute");
 
 //middleware
 app.use(cors());
@@ -32,6 +33,7 @@ app.post("/jwt", async (req, res) => {
 });
 
 app.use("/user", userRoute);
+app.use("/toy", toyRoute);
 
 const errHandler = (err, req, res, next) => {
   console.log(err);
