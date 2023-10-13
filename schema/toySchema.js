@@ -15,6 +15,10 @@ const toySchema = new Schema({
   rating: Number,
   quantity: Number,
   price: Number,
+  details: {
+    type: String,
+    default: "",
+  },
   addTime: {
     type: Date,
     default: Date.now,

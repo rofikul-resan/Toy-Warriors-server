@@ -11,6 +11,30 @@ toyRoute.get("/", async (req, res) => {
   res.send(result);
 });
 
+toyRoute.get("/get-toy/:id", async (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+  try {
+    const result = await ToyModel.findById(id);
+    res.send(result);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+toyRoute.get("/my-toy", async (req, res) => {
+  const queryEmail = req.query.email;
+  try {
+    console.log(queryEmail);
+    const result = await ToyModel.find({ "seller.email": queryEmail });
+    console.log(result);
+    res.send(result);
+  } catch (err) {
+    console.log(err);
+    res.end();
+  }
+});
+
 toyRoute.get("/category", async (req, res) => {
   const categoryKey = req.query.kay;
   const result = await ToyModel.find({ category: categoryKey }).limit(6);
@@ -19,10 +43,14 @@ toyRoute.get("/category", async (req, res) => {
 
 toyRoute.post("/", async (req, res) => {
   const data = req.body;
-  const user = new ToyModel(data);
-  const result = await user.save();
-  console.log(data);
-  res.send(result);
+  try {
+    const user = new ToyModel(data);
+    const result = await user.save();
+    console.log(result);
+    res.send(result);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 module.exports = toyRoute;
