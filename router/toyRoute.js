@@ -11,11 +11,31 @@ toyRoute.get("/", async (req, res) => {
   res.send(result);
 });
 
+// database route
+
 toyRoute.get("/get-toy/:id", async (req, res) => {
   const id = req.params.id;
   console.log(id);
   try {
     const result = await ToyModel.findById(id);
+    res.send(result);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+toyRoute.get("/search", async (req, res) => {
+  const searchKey = req.query.key;
+  const sortKeyQuery = req.query.sortKey;
+  let sortKey = 1;
+  if (!isNaN(+sortKeyQuery)) {
+    sortKey = +sortKeyQuery;
+  }
+  try {
+    const result = await ToyModel.find({
+      name: { $regex: searchKey, $options: "i" },
+    }).sort({ price: sortKey });
+    console.log(result);
     res.send(result);
   } catch (err) {
     console.log(err);
@@ -51,6 +71,20 @@ toyRoute.post("/", async (req, res) => {
   } catch (err) {
     console.log(err);
   }
+});
+
+toyRoute.patch("/:id", async (req, res) => {
+  const id = req.params.id;
+  const data = req.body;
+  const prvData = await ToyModel.findById(id);
+  const updateDoc = {
+    name: data.name || prvData.name,
+    details: data.details || prvData.details,
+    quantity: data.quantity || prvData.quantity,
+    price: data.price || prvData.price,
+  };
+  const result = await ToyModel.findByIdAndUpdate(id, updateDoc, { new: true });
+  res.send(result);
 });
 
 module.exports = toyRoute;
